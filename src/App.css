@@ -193,9 +193,29 @@
   color: #222;
 }
 
-/* Article-wide Copy Button (if distinct styling is needed) */
-/* Currently uses the shared .copy-button style */
-/* If a different button is used outside code blocks, style it here */
+/* Article-wide Copy Button */
+.article-copy-button {
+  /* Inherits base styles from .copy-button but overrides position/layout */
+  position: relative; /* Reset absolute positioning */
+  display: block; /* Make it a block element */
+  margin: 2.5rem auto 1rem; /* Center horizontally, add top/bottom margin */
+  top: auto; /* Reset top positioning */
+  right: auto; /* Reset right positioning */
+  /* Adjust padding/font-size if needed, otherwise inherits from .copy-button */
+  padding: 0.8rem 1.5rem; /* Larger padding for better visibility */
+  font-size: 0.9em;
+  background-color: #e9ecef; /* Slightly different background */
+  border-color: #ced4da;
+  color: #495057;
+}
+
+.article-copy-button:hover,
+.article-copy-button:focus {
+  background-color: #dee2e6; /* Darker hover */
+  color: #212529;
+  opacity: 1; /* Ensure full opacity on hover/focus */
+}
+
 /* Example:
 .copy-article-button {
   display: block;

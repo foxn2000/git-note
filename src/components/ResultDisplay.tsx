@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-// import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'; // Remove dark theme style import
+// ダークテーマのスタイルインポートは削除されました
 
 interface ResultDisplayProps {
     article: string | null;
@@ -14,16 +14,21 @@ const CodeBlock: React.FC<any> = ({ node, inline, className, children, ...props 
   const codeString = String(children).replace(/\n$/, ''); // 末尾の改行を削除
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(codeString).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500); // 1.5秒後に表示を元に戻す
-    });
+    navigator.clipboard.writeText(codeString)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500); // 1.5秒後に表示を元に戻す
+      })
+      .catch(err => {
+        console.error('コードブロックのコピーに失敗しました:', err);
+        // 必要に応じてユーザーへのエラー通知を追加
+      });
   };
 
   return !inline && match ? (
     <div className="code-block-container">
       <SyntaxHighlighter
-        // style={vscDarkPlus} // Remove explicit style application
+        // スタイルの明示的な適用は削除されました
         language={match[1]}
         PreTag="div"
         {...props}
@@ -42,9 +47,24 @@ const CodeBlock: React.FC<any> = ({ node, inline, className, children, ...props 
 };
 
 const ResultDisplay: React.FC<ResultDisplayProps> = ({ article }) => {
+    const [articleCopied, setArticleCopied] = useState(false); // 記事全体のコピー状態
+
     if (!article) {
         return null; // 記事がない場合は何も表示しない
     }
+
+    const handleArticleCopy = () => {
+        if (!article) return; // articleがnullの場合は何もしない
+        navigator.clipboard.writeText(article)
+            .then(() => {
+                setArticleCopied(true);
+                setTimeout(() => setArticleCopied(false), 1500); // 1.5秒後に表示を元に戻す
+            })
+            .catch(err => {
+                console.error('記事全体のコピーに失敗しました:', err);
+                // 必要に応じてユーザーへのエラー通知を追加
+            });
+    };
 
     return (
         <div className="result-display">
@@ -56,9 +76,12 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ article }) => {
             >
                 {article}
             </ReactMarkdown>
-            {/* Apply copy-button class to the article copy button */}
-            <button onClick={() => navigator.clipboard.writeText(article)} className="copy-button" style={{ position: 'relative', display: 'block', margin: '2rem auto 0' }}> {/* Add class and some inline styles for positioning */}
-                記事全体をコピー
+            {/* 記事全体のコピーボタンにクラスを適用し、インラインスタイルを削除 */}
+            <button
+                onClick={handleArticleCopy}
+                className="copy-button article-copy-button" // 新しいクラスを追加
+            >
+                {articleCopied ? 'コピー完了' : '記事全体をコピー'}
             </button>
         </div>
     );
