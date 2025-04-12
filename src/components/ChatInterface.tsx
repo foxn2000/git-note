@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useChatLLM } from '../hooks/useChatLLM';
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from './CodeBlock';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ChatInterfaceProps {
   articleContent: string;
@@ -9,6 +10,7 @@ interface ChatInterfaceProps {
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ articleContent, onClose }) => {
+  const { translations } = useLanguage();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [userInput, setUserInput] = useState('');
   const { messages, isLoading, error, sendMessage } = useChatLLM({ articleContent });
@@ -51,7 +53,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ articleContent, onClose }
     <div className="chat-overlay">
       <div className="chat-container">
         <div className="chat-header">
-          <h2>記事についてAIに質問</h2>
+          <h2>{translations.chat.header}</h2>
           <button onClick={onClose} className="chat-close-button">×</button>
         </div>
         <div className="chat-messages-container">
@@ -77,7 +79,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ articleContent, onClose }
               <div className="chat-loading-dots">
                 <span>.</span><span>.</span><span>.</span>
               </div>
-              <p>AIが応答を生成中</p>
+              <p>{translations.chat.loading}</p>
             </div>
           )}
           {error && <div className="chat-error-message">{error}</div>}
@@ -88,7 +90,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ articleContent, onClose }
             value={userInput}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            placeholder="記事に関する質問を入力してください..."
+            placeholder={translations.chat.placeholder}
             className="chat-textarea"
             rows={3}
             disabled={isLoading}
@@ -98,7 +100,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ articleContent, onClose }
             className={`chat-send-button ${(isLoading || !userInput.trim()) ? 'disabled' : ''}`}
             disabled={isLoading || !userInput.trim()}
           >
-            送信
+            {translations.chat.send}
           </button>
         </div>
       </div>

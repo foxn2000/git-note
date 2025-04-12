@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from './CodeBlock';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ResultDisplayProps {
     article: string | null;
 }
 
 const ResultDisplay: React.FC<ResultDisplayProps> = ({ article }) => {
-    const [articleCopied, setArticleCopied] = useState(false); // 記事全体のコピー状態
+    const [articleCopied, setArticleCopied] = useState(false);
+    const { translations } = useLanguage();
 
     if (!article) {
         return null; // 記事がない場合は何も表示しない
@@ -28,7 +30,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ article }) => {
 
     return (
         <div className="result-display">
-            <h2>生成された記事</h2>
+            <h2>{translations.result.title}</h2>
             <ReactMarkdown
                 components={{
                     code: CodeBlock, // code要素をカスタムコンポーネントで置き換え
@@ -41,7 +43,7 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ article }) => {
                 onClick={handleArticleCopy}
                 className="copy-button article-copy-button" // 新しいクラスを追加
             >
-                {articleCopied ? 'コピー完了' : '記事全体をコピー'}
+                {articleCopied ? translations.result.copyButton.copied : translations.result.copyButton.default}
             </button>
         </div>
     );

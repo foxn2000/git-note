@@ -1,13 +1,15 @@
-import React, { useState } from 'react'; // useState をインポート
+import React, { useState } from 'react';
 import InputForm from './components/InputForm';
 import ResultDisplay from './components/ResultDisplay';
 import LoadingIndicator from './components/LoadingIndicator';
 import ErrorDisplay from './components/ErrorDisplay';
-import ChatInterface from './components/ChatInterface'; // ChatInterface をインポート
+import ChatInterface from './components/ChatInterface';
 import useAnalysis from './hooks/useAnalysis';
-import './App.css'; // 必要に応じてスタイルを調整
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import './App.css';
 
-function App() {
+const AppContent = () => {
+  const { translations } = useLanguage();
   const { isLoading, error, generatedArticle, analyzeRepository } = useAnalysis();
   const [isChatOpen, setIsChatOpen] = useState(false); // チャット表示状態
 
@@ -20,9 +22,9 @@ function App() {
   };
 
   return (
-    <div className="App"> {/* Keep or remove this wrapper if not needed */}
-      <header className="app-header"> {/* Apply the new header class */}
-        <h1>GitNote: GitHubリポジトリ分析レポート生成</h1>
+    <div className="App">
+      <header className="app-header">
+        <h1>{translations.header.title}</h1>
       </header>
       <main>
         <InputForm onSubmit={handleFormSubmit} isLoading={isLoading} />
@@ -31,8 +33,8 @@ function App() {
         <ResultDisplay article={generatedArticle} />
         {generatedArticle && !isLoading && !error && (
           <div style={{ marginTop: '20px', textAlign: 'center' }}>
-            <button onClick={openChat} className="chat-button"> {/* スタイルは App.css で定義推奨 */}
-              この記事についてAIに質問する
+            <button onClick={openChat} className="chat-button">
+              {translations.chat.button}
             </button>
           </div>
         )}
@@ -45,6 +47,14 @@ function App() {
       </footer>
     </div>
   );
-}
+};
+
+const App = () => {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
+  );
+};
 
 export default App;

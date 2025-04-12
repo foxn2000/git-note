@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface InputFormProps {
   onSubmit: (repoName: string, language: string) => void;
@@ -7,18 +8,19 @@ interface InputFormProps {
 
 const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
   const [repoName, setRepoName] = useState('');
-  const [language, setLanguage] = useState('ja'); // デフォルトは日本語
+  const { translations } = useLanguage();
+  const [language, setLanguage] = useState('ja');
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!repoName.trim()) {
-      alert('リポジトリ名を入力してください (例: owner/repo)');
+      alert(translations.input.repository.error.required);
       return;
     }
     // 簡単な形式チェック (owner/repo)
     if (!/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+$/.test(repoName)) {
-        alert('リポジトリ名は "owner/repo" の形式で入力してください。');
-        return;
+      alert(translations.input.repository.error.format);
+      return;
     }
     onSubmit(repoName, language);
   };
@@ -27,36 +29,35 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
     // Apply the input-form class to the form or a wrapping div
     <form onSubmit={handleSubmit} className="input-form">
       <div className="form-group"> {/* Apply form-group class */}
-        <label htmlFor="repoName">GitHubリポジトリ:</label>
+        <label htmlFor="repoName">{translations.input.repository.label}</label>
         <input
           type="text"
           id="repoName"
           value={repoName}
           onChange={(e) => setRepoName(e.target.value)}
-          placeholder="例: owner/repo"
+          placeholder={translations.input.repository.placeholder}
           disabled={isLoading}
           required
         />
       </div>
       <div className="form-group"> {/* Apply form-group class */}
-        <label htmlFor="language">出力言語:</label>
+        <label htmlFor="language">{translations.input.language.label}</label>
         <select
           id="language"
           value={language}
           onChange={(e) => setLanguage(e.target.value)}
           disabled={isLoading}
         >
-          <option value="ja">日本語 (ja)</option>
-          <option value="en">英語 (en)</option>
-          {/* 必要に応じて他の言語を追加 */}
-          <option value="fr">フランス語 (fr)</option>
-          <option value="es">スペイン語 (es)</option>
-          <option value="de">ドイツ語 (de)</option>
+          <option value="ja">{translations.input.language.options.ja}</option>
+          <option value="en">{translations.input.language.options.en}</option>
+          <option value="fr">{translations.input.language.options.fr}</option>
+          <option value="es">{translations.input.language.options.es}</option>
+          <option value="de">{translations.input.language.options.de}</option>
         </select>
       </div>
       {/* Apply analyze-button class */}
       <button type="submit" disabled={isLoading} className="analyze-button">
-        {isLoading ? '分析中...' : '分析開始'}
+        {isLoading ? translations.input.button.analyzing : translations.input.button.analyze}
       </button>
     </form>
   );
