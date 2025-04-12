@@ -1,54 +1,74 @@
-# React + TypeScript + Vite
+# GitNote: GitHub Repository Analysis Report Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+GitNote is a web application that analyzes a given GitHub repository and generates a comprehensive report covering its usage, installation, structure, and code logic using AI. It fetches repository information from uithub.com and utilizes the Cerebras API for analysis.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+*   Analyzes public GitHub repositories.
+*   Generates reports in multiple languages (currently supports English and Japanese, with potential for others).
+*   Provides insights into:
+    *   **Usage:** How to use the repository.
+    *   **Installation:** Setup and environment configuration.
+    *   **Repository Structure:** Directory layout and key files.
+    *   **Code Logic:** Core algorithms and implementation details.
+*   Uses `react-markdown` and `react-syntax-highlighter` for clear report presentation.
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+*   [Node.js](https://nodejs.org/) (LTS version recommended)
+*   [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Installation
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd git-note
+    ```
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+3.  **Set up environment variables:**
+    *   Create a `.env` file in the project root by copying `.env.example`:
+        ```bash
+        cp .env.example .env
+        ```
+    *   Open the `.env` file and add your Cerebras API key:
+        ```env
+        VITE_CEREBRAS_API_KEY="<your_cerebras_api_key>"
+        ```
+        You need to obtain an API key from [Cerebras](https://www.cerebras.net/).
+
+## Usage
+
+1.  **Start the development server:**
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    ```
+2.  Open your browser and navigate to the local URL provided (usually `http://localhost:5173`).
+3.  Enter the GitHub repository name (e.g., `facebook/react`) and select the desired language for the report.
+4.  Click "Analyze Repository".
+5.  Wait for the analysis to complete. The generated report will be displayed on the page.
+
+## Environment Variables
+
+*   `VITE_CEREBRAS_API_KEY`: **Required.** Your API key for accessing the Cerebras API.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit issues or pull requests.
+
+## License
+
+[Specify your license here, e.g., MIT]
+
+---
+
+[日本語版 README (Japanese README)](README_ja.md)
