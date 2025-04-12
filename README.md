@@ -12,6 +12,14 @@ GitNote is a web application that analyzes a given GitHub repository and generat
     *   **Repository Structure:** Directory layout and key files.
     *   **Code Logic:** Core algorithms and implementation details.
 *   Uses `react-markdown` and `react-syntax-highlighter` for clear report presentation.
+*   AI-powered chat interface for repository analysis:
+    *   Ask questions about the repository content and receive detailed explanations
+    *   Get clarification on code implementation and architecture
+    *   Explore repository features and usage through interactive dialogue
+*   Enhanced chat interface features:
+    *   Natural text input with Enter key for line breaks
+    *   Send messages with Ctrl+Enter (Cmd+Enter on Mac)
+    *   Real-time streaming responses from AI
 
 ## Prerequisites
 
