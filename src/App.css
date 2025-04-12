@@ -279,6 +279,31 @@
 
 /* ===== Article Display Styles End ===== */ /* This comment seems misplaced, but keeping for now */
 
+/* Chat Button Styling */
+.chat-button {
+  padding: 0.8em 2em;
+  background-color: #4a7c82;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.chat-button:hover {
+  background-color: #3b6369;
+  transform: translateY(-1px);
+}
+
+.chat-button:disabled {
+  background-color: #cccccc;
+  color: #888888;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Remove old logo/card styles if no longer used */
 /*
 .logo, .logo.react, .card, .read-the-docs {
