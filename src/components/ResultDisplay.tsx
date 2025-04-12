@@ -9,6 +9,8 @@ interface ResultDisplayProps {
 
 // コードブロック用のカスタムコンポーネント
 const CodeBlock: React.FC<any> = ({ node, inline, className, children, ...props }) => {
+  console.log("CodeBlock received children:", children); // ★デバッグ用ログ追加
+  console.log("CodeBlock received className:", className); // 言語クラス名確認用
   const [copied, setCopied] = useState(false);
   const match = /language-(\w+)/.exec(className || '');
   const codeString = String(children).replace(/\n$/, ''); // 末尾の改行を削除
