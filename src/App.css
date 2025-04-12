@@ -1,21 +1,268 @@
+/* General App Layout */
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: left; /* デフォルトを左寄せに変更 */
+  text-align: left;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+/* Header Section Styling */
+.app-header {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e0e0e0; /* Subtle separator */
+  text-align: center; /* Center header content */
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.app-header h1 {
+  margin-bottom: 1.5rem;
+  color: #3b6369; /* Darker teal for main title */
+  font-weight: 700;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+
+/* Input Form Styling */
+.input-form {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  align-items: center; /* Center items horizontally */
+  gap: 1rem; /* Space between form elements */
+  max-width: 600px; /* Limit form width */
+  margin: 0 auto; /* Center form */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column; /* Label above input */
+  width: 100%;
+  text-align: left; /* Align labels left */
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.form-group input[type="text"],
+.form-group select {
+  padding: 0.8em 1em;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  font-size: 1em;
+  font-family: 'Atkinson Hyperlegible', 'Noto Sans JP', sans-serif;
+  background-color: #ffffff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus {
+  border-color: #4a7c82;
+  box-shadow: 0 0 0 2px rgba(74, 124, 130, 0.2);
+  outline: none;
+}
+
+/* Analysis Button Styling */
+.analyze-button {
+  /* Inherits base button styles from index.css */
+  padding: 0.8em 2em; /* More horizontal padding */
+  background-color: #4a7c82; /* Accent color background */
+  color: #ffffff; /* White text */
+  border: none; /* Remove default border */
+  font-weight: 700;
+  margin-top: 1rem; /* Space above button */
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.analyze-button:hover {
+  background-color: #3b6369; /* Darker accent on hover */
+  color: #ffffff;
+  border: none;
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+.analyze-button:disabled {
+  background-color: #cccccc;
+  color: #888888;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===== Article Display Styles Start ===== */
+
+.result-display {
+  max-width: 800px;
+  margin: 3rem auto;
+  padding: 2.5rem 4rem; /* Increased padding */
+  background-color: #ffffff; /* White background for contrast */
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); /* Softer shadow */
+  border-radius: 8px; /* Slightly more rounded corners */
+  text-align: left;
+  line-height: 1.75; /* Maintain good line height */
+  color: #333;
+  /* Font is inherited from body, no need to set serif here unless specifically desired */
+}
+
+/* "Generated Article" Heading */
+.result-display > h2:first-of-type { /* Target the specific heading */
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 2.5rem;
+  font-size: 2em; /* Larger size */
+  font-weight: 700;
+  color: #4a7c82; /* Accent color */
+  /* Font family inherited */
+}
+
+/* General Headings within the article */
+.result-display h1, /* Assuming h1 might appear */
+.result-display h2,
+.result-display h3,
+.result-display h4,
+.result-display h5,
+.result-display h6 {
+  margin-top: 2em;
+  margin-bottom: 0.8em;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #3b6369; /* Darker teal for headings */
+  /* Font family inherited */
+}
+
+.result-display p {
+  margin-bottom: 1.2em;
+}
+
+.result-display ul,
+.result-display ol {
+  padding-left: 1.5em;
+  margin-bottom: 1.2em;
+}
+
+.result-display li {
+  margin-bottom: 0.5em;
+}
+
+/* Code Block Styling */
+.code-block-container {
+  position: relative;
+  margin: 2em 0; /* More vertical margin */
+}
+
+/* react-syntax-highlighter pre tag */
+.code-block-container pre {
+  padding: 1.5em 1em 1em 1.5em !important; /* Adjust padding */
+  margin: 0 !important;
+  border-radius: 6px;
+  overflow-x: auto;
+  background-color: #f8f9fa !important; /* Light background for code */
+  border: 1px solid #e0e0e0;
+  line-height: 1.5; /* Adjust line height for code */
+}
+
+/* Code element within pre */
+.code-block-container pre code {
+  font-family: 'Fragment Mono', monospace !important; /* Apply Fragment Mono */
+  font-size: 0.9em !important; /* Adjust code font size */
+  color: #333; /* Base code color */
+}
+
+/* Copy Button (Shared style for all copy buttons) */
+.copy-button {
+  position: absolute;
+  top: 0.6em;
+  right: 0.6em;
+  padding: 0.4em 0.8em;
+  font-size: 0.8em;
+  font-family: 'Atkinson Hyperlegible', 'Noto Sans JP', sans-serif; /* Match UI font */
+  background-color: rgba(200, 200, 200, 0.3);
+  color: #555;
+  border: 1px solid rgba(200, 200, 200, 0.4);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+  z-index: 1; /* Ensure it's above code */
+}
+
+.copy-button:hover,
+.copy-button:focus {
+  opacity: 1;
+  background-color: rgba(180, 180, 180, 0.5);
+  color: #222;
+}
+
+/* Article-wide Copy Button (if distinct styling is needed) */
+/* Currently uses the shared .copy-button style */
+/* If a different button is used outside code blocks, style it here */
+/* Example:
+.copy-article-button {
+  display: block;
+  margin: 2.5rem auto 1rem;
+  padding: 0.8rem 1.5rem;
+  // Add specific styles
+}
+*/
+
+/* Error Display Styling */
+.error-display {
+  color: #d9534f; /* Red color for errors */
+  background-color: #f2dede; /* Light red background */
+  border: 1px solid #ebccd1;
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  margin: 2rem auto;
+  max-width: 800px;
+  text-align: center;
+}
+
+/* Loading Indicator Styling */
+.loading-indicator {
+  text-align: center;
+  margin: 3rem auto;
+  font-size: 1.2em;
+  color: #555;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+  .result-display {
+    padding: 1.5rem 2rem;
+  }
+  .app-header h1 {
+    font-size: 2.5em;
+  }
+  .result-display > h2:first-of-type {
+    font-size: 1.6em;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header h1 {
+    font-size: 2em;
+  }
+  .result-display {
+    padding: 1rem 1.5rem;
+  }
+  .code-block-container pre {
+    padding: 1em 0.8em 0.8em 1em !important;
+  }
+  .copy-button {
+    font-size: 0.75em;
+    padding: 0.3em 0.6em;
+  }
+}
+
+/* ===== Article Display Styles End ===== */ /* This comment seems misplaced, but keeping for now */
+
+/* Remove old logo/card styles if no longer used */
+/*
+.logo, .logo.react, .card, .read-the-docs {
+  display: none;
 }
 
 @keyframes logo-spin {
@@ -26,117 +273,4 @@
     transform: rotate(360deg);
   }
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-/* ===== Article Display Styles Start ===== */
-
-.result-display {
-  max-width: 800px; /* 読みやすい最大幅 */
-  margin: 3rem auto; /* 上下に十分なマージン、左右autoでブロック全体を中央寄せ */
-  padding: 2rem 4rem;   /* 内側の左右に広めの余白 */
-  background-color: #f9f9f9; /* 本文エリアの背景色 */
-  border: 1px solid #e0e0e0; /* 境界線 */
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08); /* 控えめな影 */
-  border-radius: 4px; /* 角を少し丸める */
-  text-align: left;  /* このブロック内のテキストは左寄せ */
-  line-height: 1.75; /* 行間 */
-  font-family: Georgia, 'Times New Roman', Times, serif; /* セリフ体フォント */
-  color: #333; /* 文字色 */
-}
-
-/* ReactMarkdownによって生成される要素のスタイル調整 */
-.result-display p {
-  margin-bottom: 1.2em; /* 段落間のスペース */
-}
-
-.result-display h1,
-.result-display h2,
-.result-display h3,
-.result-display h4,
-.result-display h5,
-.result-display h6 {
-  margin-top: 1.8em;
-  margin-bottom: 0.6em;
-  line-height: 1.3; /* 見出しの行間は少し詰める */
-  font-family: "Helvetica Neue", Arial, sans-serif; /* 見出しはサンセリフ体にする場合 (任意) */
-}
-
-/* コンポーネント内の「生成された記事」見出し */
-.result-display > h2 {
-  text-align: center; /* 見出しは中央揃え */
-  margin-top: 0; /* result-displayのpaddingがあるので上マージン不要 */
-  margin-bottom: 2rem;
-  font-size: 1.8em;
-  font-weight: bold;
-  font-family: "Helvetica Neue", Arial, sans-serif; /* サンセリフ体 */
-}
-
-/* コピーボタン */
-.result-display button {
-  display: block; /* ブロック要素化 */
-  margin: 2.5rem auto 1rem; /* 上マージンを増やし、左右autoで中央寄せ */
-  padding: 0.8rem 1.5rem;
-  cursor: pointer;
-  /* ボタンのスタイルはお好みで調整 */
-}
-
-/* コードブロックのコンテナ */
-.code-block-container {
-  position: relative; /* コピーボタンの絶対配置のため */
-  margin: 1.5em 0; /* 上下のマージン */
-}
-
-/* react-syntax-highlighter によって生成される pre タグのスタイル */
-.code-block-container pre {
-  padding: 1.5em 1em 1em 1em !important; /* パディング調整 (コピーボタンのスペース確保) */
-  margin: 0 !important; /* コンテナのマージンを使うので不要 */
-  border-radius: 4px; /* 角を少し丸める */
-  overflow-x: auto; /* 横スクロールを可能に */
-}
-
-/* コードブロック内のコピーボタン */
-.copy-button {
-  position: absolute;
-  top: 0.5em; /* 上からの位置 */
-  right: 0.5em; /* 右からの位置 */
-  padding: 0.3em 0.6em;
-  font-size: 0.8em;
-  background-color: rgba(200, 200, 200, 0.2); /* 少し透明な背景 */
-  color: #ccc; /* 文字色 */
-  border: 1px solid rgba(200, 200, 200, 0.3);
-  border-radius: 3px;
-  cursor: pointer;
-  opacity: 0.7; /* 通常時は少し薄く */
-  transition: opacity 0.2s, background-color 0.2s;
-}
-
-.copy-button:hover,
-.copy-button:focus {
-  opacity: 1; /* ホバー/フォーカスで濃く */
-  background-color: rgba(200, 200, 200, 0.4);
-}
-
-/* 記事全体のコピーボタンとの区別 (任意) */
-.result-display > button { /* 既存のボタンセレクタ */
-  display: block;
-  margin: 2.5rem auto 1rem;
-  padding: 0.8rem 1.5rem;
-  cursor: pointer;
-  /* ボタンのスタイルはお好みで調整 */
-}
-
-
-/* ===== Article Display Styles End ===== */
+*/

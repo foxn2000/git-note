@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'; // ダークテーマのスタイル
+// import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'; // Remove dark theme style import
 
 interface ResultDisplayProps {
     article: string | null;
@@ -23,7 +23,7 @@ const CodeBlock: React.FC<any> = ({ node, inline, className, children, ...props 
   return !inline && match ? (
     <div className="code-block-container">
       <SyntaxHighlighter
-        style={vscDarkPlus} // ダークテーマスタイルを適用
+        // style={vscDarkPlus} // Remove explicit style application
         language={match[1]}
         PreTag="div"
         {...props}
@@ -56,8 +56,8 @@ const ResultDisplay: React.FC<ResultDisplayProps> = ({ article }) => {
             >
                 {article}
             </ReactMarkdown>
-            {/* 記事全体のコピーボタンは残す */}
-            <button onClick={() => navigator.clipboard.writeText(article)}>
+            {/* Apply copy-button class to the article copy button */}
+            <button onClick={() => navigator.clipboard.writeText(article)} className="copy-button" style={{ position: 'relative', display: 'block', margin: '2rem auto 0' }}> {/* Add class and some inline styles for positioning */}
                 記事全体をコピー
             </button>
         </div>

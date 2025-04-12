@@ -15,8 +15,8 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className="App"> {/* Keep or remove this wrapper if not needed */}
+      <header className="app-header"> {/* Apply the new header class */}
         <h1>GitNote: GitHubリポジトリ分析レポート生成</h1>
       </header>
       <main>

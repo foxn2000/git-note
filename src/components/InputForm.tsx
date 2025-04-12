@@ -24,8 +24,9 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    // Apply the input-form class to the form or a wrapping div
+    <form onSubmit={handleSubmit} className="input-form">
+      <div className="form-group"> {/* Apply form-group class */}
         <label htmlFor="repoName">GitHubリポジトリ:</label>
         <input
           type="text"
@@ -37,7 +38,7 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
           required
         />
       </div>
-      <div>
+      <div className="form-group"> {/* Apply form-group class */}
         <label htmlFor="language">出力言語:</label>
         <select
           id="language"
@@ -53,7 +54,8 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
           <option value="de">ドイツ語 (de)</option>
         </select>
       </div>
-      <button type="submit" disabled={isLoading}>
+      {/* Apply analyze-button class */}
+      <button type="submit" disabled={isLoading} className="analyze-button">
         {isLoading ? '分析中...' : '分析開始'}
       </button>
     </form>
