@@ -1,5 +1,6 @@
 # GitNote: GitHub Repository Analysis Report Generator
 
+![alt text](image.png)
 GitNote is a web application that analyzes a given GitHub repository and generates a comprehensive report covering its usage, installation, structure, and code logic using AI. It fetches repository information from uithub.com and utilizes the Cerebras API for analysis.
 
 ## Features

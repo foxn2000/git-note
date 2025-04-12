@@ -1,5 +1,7 @@
 # GitNote: GitHubリポジトリ分析レポート生成ツール
 
+![alt text](image-1.png)
+
 GitNoteは、指定されたGitHubリポジトリを分析し、AIを使用してその使い方、インストール方法、構造、コードロジックを網羅した包括的なレポートを生成するWebアプリケーションです。uithub.comからリポジトリ情報を取得し、Cerebras APIを利用して分析を行います。
 
 ## 機能
