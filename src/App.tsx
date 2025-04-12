@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import InputForm from './components/InputForm';
 import ResultDisplay from './components/ResultDisplay';
 import LoadingIndicator from './components/LoadingIndicator';
