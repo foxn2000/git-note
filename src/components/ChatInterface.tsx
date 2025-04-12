@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useChatLLM } from '../hooks/useChatLLM';
+import ReactMarkdown from 'react-markdown';
+import CodeBlock from './CodeBlock';
 
 interface ChatInterfaceProps {
-  articleContent: string; // 現在の記事内容を受け取る
-  onClose: () => void; // チャットを閉じるための関数
+  articleContent: string;
+  onClose: () => void;
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ articleContent, onClose }) => {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const [userInput, setUserInput] = useState('');
   const { messages, isLoading, error, sendMessage } = useChatLLM({ articleContent });
 
@@ -30,38 +33,63 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ articleContent, onClose }
   };
 
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
-    <div style={styles.overlay}>
-      <div style={styles.chatContainer}>
-        <div style={styles.header}>
+    <div className="chat-overlay">
+      <div className="chat-container">
+        <div className="chat-header">
           <h2>記事についてAIに質問</h2>
-          <button onClick={onClose} style={styles.closeButton}>×</button>
+          <button onClick={onClose} className="chat-close-button">×</button>
         </div>
-        <div style={styles.messagesContainer}>
+        <div className="chat-messages-container">
           {messages.map((msg, index) => (
-            <div key={index} style={msg.sender === 'user' ? styles.userMessage : styles.aiMessage}>
-              <p style={styles.messageText}>{msg.text}</p>
+            <div key={index} className={msg.sender === 'user' ? 'chat-user-message' : 'chat-ai-message'}>
+              {msg.sender === 'user' ? (
+                <p className="chat-message-text">{msg.text}</p>
+              ) : (
+                <div className="chat-ai-content">
+                  <ReactMarkdown
+                    components={{
+                      code: CodeBlock,
+                    }}
+                  >
+                    {msg.text}
+                  </ReactMarkdown>
+                </div>
+              )}
             </div>
           ))}
-          {isLoading && <div style={styles.loadingIndicator}>AIが応答を生成中...</div>}
-          {error && <div style={styles.errorMessage}>{error}</div>}
+          {isLoading && (
+            <div className="chat-loading-indicator">
+              <div className="chat-loading-dots">
+                <span>.</span><span>.</span><span>.</span>
+              </div>
+              <p>AIが応答を生成中</p>
+            </div>
+          )}
+          {error && <div className="chat-error-message">{error}</div>}
+          <div ref={messagesEndRef} />
         </div>
-        <div style={styles.inputArea}>
+        <div className="chat-input-area">
           <textarea
             value={userInput}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             placeholder="記事に関する質問を入力してください..."
-            style={styles.textarea}
+            className="chat-textarea"
             rows={3}
             disabled={isLoading}
           />
           <button
             onClick={handleSendMessage}
-            style={{
-              ...styles.sendButton,
-              ...( (isLoading || !userInput.trim()) && styles.sendButtonDisabled ) // disabled状態のスタイルを適用
-            }}
+            className={`chat-send-button ${(isLoading || !userInput.trim()) ? 'disabled' : ''}`}
             disabled={isLoading || !userInput.trim()}
           >
             送信
@@ -72,117 +100,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ articleContent, onClose }
   );
 };
 
-// 簡単なインラインスタイル (必要に応じてCSSファイルに移動)
-const styles: { [key: string]: React.CSSProperties } = {
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-  },
-  chatContainer: {
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    width: '90%',
-    maxWidth: '600px',
-    height: '70vh',
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px 20px',
-    borderBottom: '1px solid #eee',
-    backgroundColor: '#f7f7f7',
-  },
-  closeButton: {
-    background: 'none',
-    border: 'none',
-    fontSize: '24px',
-    cursor: 'pointer',
-    color: '#666',
-  },
-  messagesContainer: {
-    flexGrow: 1,
-    overflowY: 'auto',
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  },
-  userMessage: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#dcf8c6',
-    borderRadius: '10px 10px 0 10px',
-    padding: '8px 12px',
-    maxWidth: '80%',
-  },
-  aiMessage: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#f1f0f0',
-    borderRadius: '10px 10px 10px 0',
-    padding: '8px 12px',
-    maxWidth: '80%',
-  },
-  messageText: {
-    margin: 0,
-    whiteSpace: 'pre-wrap', // 改行を保持
-    wordBreak: 'break-word', // 長い単語を折り返す
-  },
-  loadingIndicator: {
-    textAlign: 'center',
-    color: '#888',
-    padding: '10px',
-  },
-  errorMessage: {
-    textAlign: 'center',
-    color: 'red',
-    padding: '10px',
-    backgroundColor: '#ffebee',
-    borderRadius: '4px',
-    margin: '10px 0',
-  },
-  inputArea: {
-    display: 'flex',
-    padding: '10px 20px',
-    borderTop: '1px solid #eee',
-    backgroundColor: '#f7f7f7',
-  },
-  textarea: {
-    flexGrow: 1,
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    padding: '10px',
-    fontSize: '14px',
-    resize: 'none', // リサイズ不可
-    marginRight: '10px',
-  },
-  sendButton: {
-    padding: '10px 15px',
-    backgroundColor: '#007bff',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '14px',
-    transition: 'background-color 0.2s',
-    // ':disabled' はインラインスタイルでは直接使えないため削除
-  },
-  sendButtonDisabled: { // disabled時のスタイルを別プロパティとして定義
-    backgroundColor: '#ccc',
-    cursor: 'not-allowed',
-  }
-};
 
 
 export default ChatInterface;
