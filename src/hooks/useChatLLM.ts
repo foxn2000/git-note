@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useModelConfig } from './useModelConfig';
 
 interface Message {
   sender: 'user' | 'ai';
@@ -8,14 +9,16 @@ interface Message {
 
 interface UseChatLLMProps {
   articleContent: string;
+  modelId?: string; // オプションでモデルIDを指定可能に
 }
 
-const CEREBRAS_API_ENDPOINT = 'https://api.cerebras.ai/v1/chat/completions';
-
-export const useChatLLM = ({ articleContent }: UseChatLLMProps) => {
+export const useChatLLM = ({ articleContent, modelId }: UseChatLLMProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // モデル設定フックを使用
+  const { getModelConfig, getApiKey } = useModelConfig();
 
   const generateSystemPrompt = (messages: Message[]) => {
     return `あなたは、提供された記事の内容についてユーザーからの質問に答えるAIアシスタントです。
@@ -42,23 +45,26 @@ ${messages.map(msg => `${msg.sender === 'user' ? 'ユーザー' : 'AI'}: ${msg.t
     setError(null);
 
     try {
-      const apiKey = import.meta.env.VITE_CEREBRAS_API_KEY;
+      // モデル設定を取得
+      const modelConfig = getModelConfig(modelId);
+      const apiKey = getApiKey(modelId);
+      
       if (!apiKey) {
-        throw new Error('APIキーが設定されていません。');
+        throw new Error(`APIキー(${modelConfig.apiKeyEnvName})が設定されていません。`);
       }
 
       // ストリーミング用の空のメッセージを追加
       const streamingMessage: Message = { sender: 'ai', text: '', isStreaming: true };
       setMessages(prevMessages => [...prevMessages, streamingMessage]);
 
-      const response = await fetch(CEREBRAS_API_ENDPOINT, {
+      const response = await fetch(modelConfig.baseUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: 'llama-4-scout-17b-16e-instruct',
+          model: modelConfig.name,
           messages: [
             {
               role: 'system',
@@ -69,8 +75,8 @@ ${messages.map(msg => `${msg.sender === 'user' ? 'ユーザー' : 'AI'}: ${msg.t
               content: userMessage,
             },
           ],
-          max_tokens: 1000,
-          temperature: 0.7,
+          max_tokens: modelConfig.defaultParams.max_tokens,
+          temperature: modelConfig.defaultParams.temperature,
           stream: true, // ストリーミングを有効化
         }),
       });

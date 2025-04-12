@@ -1,10 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-
-// Cerebras APIキーを環境変数から取得
-const CEREBRAS_API_KEY = import.meta.env.VITE_CEREBRAS_API_KEY;
-const CEREBRAS_API_ENDPOINT = 'https://api.cerebras.ai/v1/chat/completions';
-const MODEL_NAME = 'llama-4-scout-17b-16e-instruct';
+import { useModelConfig } from './useModelConfig';
 
 // 分析する視点
 const ANALYSIS_PERSPECTIVES = [
@@ -18,19 +14,26 @@ interface AnalysisResult {
   [key: string]: string;
 }
 
-const useAnalysis = () => {
+const useAnalysis = (modelId?: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [generatedArticle, setGeneratedArticle] = useState<string | null>(null);
+
+  // モデル設定フックを使用
+  const { getModelConfig, getApiKey } = useModelConfig();
 
   const analyzeRepository = async (repoName: string, language: string) => {
     setIsLoading(true);
     setError(null);
     setGeneratedArticle(null);
 
-    if (!CEREBRAS_API_KEY) {
+    // モデル設定を取得
+    const modelConfig = getModelConfig(modelId);
+    const apiKey = getApiKey(modelId);
+
+    if (!apiKey) {
       setError(
-        'Cerebras APIキーが設定されていません。.env ファイルに VITE_CEREBRAS_API_KEY を設定してください。'
+        `${modelConfig.apiKeyEnvName}が設定されていません。.env ファイルに ${modelConfig.apiKeyEnvName} を設定してください。`
       );
       setIsLoading(false);
       return;
@@ -92,17 +95,17 @@ const useAnalysis = () => {
         const prompt = generatePrompt(perspective, markdownContent, language);
         try {
           const response = await axios.post(
-            CEREBRAS_API_ENDPOINT,
+            modelConfig.baseUrl,
             {
-              model: MODEL_NAME,
+              model: modelConfig.name,
               messages: [{ role: 'user', content: prompt }],
-              temperature: 0.7,
+              temperature: modelConfig.defaultParams.temperature,
               max_tokens: 1500,
             },
             {
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${CEREBRAS_API_KEY}`,
+                Authorization: `Bearer ${apiKey}`,
               },
               timeout: 30000,
             }
@@ -142,7 +145,8 @@ const useAnalysis = () => {
       const finalArticle = await generateUnifiedArticle(
         repoName,
         analysisResults,
-        language
+        language,
+        modelId
       );
       setGeneratedArticle(finalArticle);
     } catch (err: any) {
@@ -536,7 +540,8 @@ ${markdown}
   const generateUnifiedArticle = async (
     repoName: string,
     results: AnalysisResult,
-    lang: string
+    lang: string,
+    modelId?: string
   ): Promise<string> => {
     const isJA = lang === 'ja';
     const isEN = lang === 'en';
@@ -627,18 +632,21 @@ ${results.logic || ''}
     }
 
     try {
+      const modelConfig = getModelConfig(modelId);
+      const apiKey = getApiKey(modelId);
+
       const response = await axios.post(
-        CEREBRAS_API_ENDPOINT,
+        modelConfig.baseUrl,
         {
-          model: MODEL_NAME,
+          model: modelConfig.name,
           messages: [{ role: 'user', content: unifyPrompt }],
-          temperature: 0.7,
+          temperature: modelConfig.defaultParams.temperature,
           max_tokens: 2000,
         },
         {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${CEREBRAS_API_KEY}`,
+            Authorization: `Bearer ${apiKey}`,
           },
           timeout: 30000,
         }

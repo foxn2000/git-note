@@ -1,0 +1,41 @@
+# モデル設定
+models:
+  # デフォルトで使用するモデルID
+  default: cerebras-llama4
+
+  # 利用可能なモデル定義
+  available:
+    # Cerebras LLaMA 4モデル
+    cerebras-llama4:
+      name: llama-4-scout-17b-16e-instruct
+      baseUrl: https://api.cerebras.ai/v1/chat/completions
+      apiKeyEnvName: VITE_CEREBRAS_API_KEY
+      defaultParams:
+        temperature: 0.7
+        max_tokens: 4096
+    # Cerebras LLaMA 3モデル
+    cerebras-llama3:
+      name: llama-3.3-70b
+      baseUrl: https://api.cerebras.ai/v1/chat/completions
+      apiKeyEnvName: VITE_CEREBRAS_API_KEY
+      defaultParams:
+        temperature: 0.7
+        max_tokens: 4096
+    
+    # OpenAI GPT-4oモデル
+    openai-gpt4o:
+      name: gpt-4o
+      baseUrl: https://api.openai.com/v1/chat/completions
+      apiKeyEnvName: VITE_OPENAI_API_KEY
+      defaultParams:
+        temperature: 0.7
+        max_tokens: 4096
+    
+    # Claude 3.5モデル
+    anthropic-claude:
+      name: claude-3-5-haiku-20241022
+      baseUrl: https://api.anthropic.com/v1/messages
+      apiKeyEnvName: VITE_ANTHROPIC_API_KEY
+      defaultParams:
+        temperature: 0.7
+        max_tokens: 4096
