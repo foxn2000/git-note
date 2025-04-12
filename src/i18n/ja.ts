@@ -39,5 +39,10 @@ export const ja = {
       default: "記事全体をコピー",
       copied: "コピー完了"
     }
+  },
+  codeBlock: {
+    copy: "コピー",
+    copied: "コピー完了",
+    error: "コードブロックのコピーに失敗しました"
   }
 };

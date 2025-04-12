@@ -39,5 +39,10 @@ export const en = {
       default: "Copy entire article",
       copied: "Copied"
     }
+  },
+  codeBlock: {
+    copy: "Copy",
+    copied: "Copied",
+    error: "Failed to copy code block"
   }
 };
