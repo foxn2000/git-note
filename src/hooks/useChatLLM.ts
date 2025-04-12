@@ -20,9 +20,14 @@ export const useChatLLM = ({ articleContent, modelId }: UseChatLLMProps) => {
   // モデル設定フックを使用
   const { getModelConfig, getApiKey } = useModelConfig();
 
+  /**
+   * ユーザーに対して「記事の内容に関する質問にのみ回答し、それ以外は答えない」という方針を明確に示す。
+   */
   const generateSystemPrompt = (messages: Message[]) => {
-    return `あなたは、提供された記事の内容についてユーザーからの質問に答えるAIアシスタントです。
-以下の記事をよく読んで、ユーザーの質問に分かりやすく答えてください。
+    return `あなたは、提供された記事の内容についてのみ答えるAIアシスタントです。
+以下の記事内容から答えられる質問にのみ答えてください。
+もしユーザーの質問が、記事の内容に含まれない情報や記事の範囲を超えるものである場合は、
+「申し訳ありませんが、そのご質問は記事の内容からはお答えできません。」と返答してください。
 
 # 記事内容:
 ${articleContent}
