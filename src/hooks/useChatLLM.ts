@@ -3,6 +3,7 @@ import { useState } from 'react';
 interface Message {
   sender: 'user' | 'ai';
   text: string;
+  isStreaming?: boolean;
 }
 
 interface UseChatLLMProps {
@@ -46,6 +47,10 @@ ${messages.map(msg => `${msg.sender === 'user' ? 'ユーザー' : 'AI'}: ${msg.t
         throw new Error('APIキーが設定されていません。');
       }
 
+      // ストリーミング用の空のメッセージを追加
+      const streamingMessage: Message = { sender: 'ai', text: '', isStreaming: true };
+      setMessages(prevMessages => [...prevMessages, streamingMessage]);
+
       const response = await fetch(CEREBRAS_API_ENDPOINT, {
         method: 'POST',
         headers: {
@@ -64,8 +69,9 @@ ${messages.map(msg => `${msg.sender === 'user' ? 'ユーザー' : 'AI'}: ${msg.t
               content: userMessage,
             },
           ],
-          max_tokens: 1000, // 必要に応じて調整
-          temperature: 0.7, // 必要に応じて調整
+          max_tokens: 1000,
+          temperature: 0.7,
+          stream: true, // ストリーミングを有効化
         }),
       });
 
@@ -74,15 +80,58 @@ ${messages.map(msg => `${msg.sender === 'user' ? 'ユーザー' : 'AI'}: ${msg.t
         throw new Error(errorData.error?.message || 'APIリクエストに失敗しました。');
       }
 
-      const data = await response.json();
-      const aiResponse = data.choices[0]?.message?.content;
-
-      if (!aiResponse) {
-        throw new Error('AIからの応答を取得できませんでした。');
+      if (!response.body) {
+        throw new Error('レスポンスボディが空です。');
       }
 
-      const newAiMessage: Message = { sender: 'ai', text: aiResponse };
-      setMessages(prevMessages => [...prevMessages, newAiMessage]);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulatedText = '';
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n');
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') continue;
+
+              try {
+                const parsed = JSON.parse(data);
+                const content = parsed.choices[0]?.delta?.content || '';
+                if (content) {
+                  accumulatedText += content;
+                  setMessages(prevMessages => {
+                    const newMessages = [...prevMessages];
+                    const lastMessage = newMessages[newMessages.length - 1];
+                    if (lastMessage && lastMessage.isStreaming) {
+                      lastMessage.text = accumulatedText;
+                    }
+                    return newMessages;
+                  });
+                }
+              } catch (e) {
+                console.error('Error parsing streaming data:', e);
+              }
+            }
+          }
+        }
+      } finally {
+        // ストリーミング完了後、isStreamingフラグを削除
+        setMessages(prevMessages => {
+          const newMessages = [...prevMessages];
+          const lastMessage = newMessages[newMessages.length - 1];
+          if (lastMessage && lastMessage.isStreaming) {
+            lastMessage.isStreaming = false;
+          }
+          return newMessages;
+        });
+      }
 
     } catch (err) {
       console.error('Error in sendMessage:', err);

@@ -26,10 +26,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ articleContent, onClose }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault(); // デフォルトの改行動作を抑制
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const sendKeyCombination = isMac 
+      ? event.key === 'Enter' && event.metaKey  // Mac では Command + Enter
+      : event.key === 'Enter' && event.ctrlKey; // その他では Ctrl + Enter
+    
+    if (sendKeyCombination) {
+      event.preventDefault();
       handleSendMessage();
     }
+    // Enter のみの場合は通常の改行を許可（preventDefault を呼ばない）
   };
 
 
