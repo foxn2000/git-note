@@ -67,7 +67,39 @@ GitNoteは、指定されたGitHubリポジトリを分析し、AIを使用し�
 
 ## 環境変数
 
-*   `VITE_CEREBRAS_API_KEY`: **必須。** Cerebras APIにアクセスするためのAPIキー。
+以下の環境変数を `.env` ファイルで設定できます：
+
+*   `VITE_CEREBRAS_API_KEY`: Cerebras APIにアクセスするためのAPIキー
+*   `VITE_OPENAI_API_KEY`: OpenAI APIにアクセスするためのAPIキー
+*   `VITE_ANTHROPIC_API_KEY`: Anthropic APIにアクセスするためのAPIキー
+
+使用予定のモデルのAPIキーのみを設定すれば良く、デフォルトで使用するモデルは `src/config/models.yaml` で設定できます。
+
+## モデル設定
+
+このアプリケーションは複数の言語モデルをサポートしており、`src/config/models.yaml` で設定できます：
+
+```yaml
+models:
+  # デフォルトで使用するモデル
+  default: cerebras-llama4
+
+  # 利用可能なモデル
+  available:
+    cerebras-llama4:
+      name: llama-4-scout-17b-16e-instruct
+      baseUrl: https://api.cerebras.ai/v1/chat/completions
+      apiKeyEnvName: VITE_CEREBRAS_API_KEY
+      defaultParams:
+        temperature: 0.7
+        max_tokens: 1000
+    # 他のモデルを必要に応じて追加
+```
+
+以下のようなカスタマイズが可能です：
+- `default` の値を変更してデフォルトモデルを切り替え
+- `available` セクションに新しいモデルを追加
+- temperatureやmax_tokensなどのモデル固有のパラメータを設定
 
 ## コントリビューション
 

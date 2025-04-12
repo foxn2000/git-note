@@ -67,7 +67,39 @@ GitNote is a web application that analyzes a given GitHub repository and generat
 
 ## Environment Variables
 
-*   `VITE_CEREBRAS_API_KEY`: **Required.** Your API key for accessing the Cerebras API.
+The following environment variables can be configured in your `.env` file:
+
+*   `VITE_CEREBRAS_API_KEY`: Your API key for accessing the Cerebras API
+*   `VITE_OPENAI_API_KEY`: Your API key for accessing the OpenAI API
+*   `VITE_ANTHROPIC_API_KEY`: Your API key for accessing the Anthropic API
+
+You only need to set the API key for the model you plan to use. The default model can be configured in `src/config/models.yaml`.
+
+## Model Configuration
+
+The application supports multiple language models that can be configured in `src/config/models.yaml`:
+
+```yaml
+models:
+  # Default model to use
+  default: cerebras-llama4
+
+  # Available models
+  available:
+    cerebras-llama4:
+      name: llama-4-scout-17b-16e-instruct
+      baseUrl: https://api.cerebras.ai/v1/chat/completions
+      apiKeyEnvName: VITE_CEREBRAS_API_KEY
+      defaultParams:
+        temperature: 0.7
+        max_tokens: 1000
+    # Add other models as needed
+```
+
+You can:
+- Change the default model by modifying the `default` value
+- Add new models to the `available` section
+- Configure model-specific parameters like temperature and max_tokens
 
 ## Contributing
 
