@@ -73,12 +73,18 @@ The following environment variables can be configured in your `.env` file:
 *   `VITE_CEREBRAS_API_KEY`: Your API key for accessing the Cerebras API
 *   `VITE_OPENAI_API_KEY`: Your API key for accessing the OpenAI API
 *   `VITE_ANTHROPIC_API_KEY`: Your API key for accessing the Anthropic API
+*   `VITE_COSTOM_MODE`: Set to "true" to enable custom API mode
+*   `VITE_COSTOM_BASE_URL`: Base URL for your custom OpenAI-compatible API endpoint
+*   `VITE_COSTOM_API_KEY`: API key for your custom API
+*   `VITE_COSTOM_MODEL_NAME`: Model name to use with your custom API
 
-You only need to set the API key for the model you plan to use. The default model can be configured in `src/config/models.yaml`.
+You only need to set the API key for the model you plan to use. The default model can be configured in `src/config/models.yaml`. When custom mode is enabled, the configuration from `models.yaml` will be ignored, and the custom API settings will be used instead.
 
 ## Model Configuration
 
-The application supports multiple language models that can be configured in `src/config/models.yaml`:
+The application supports multiple language models that can be configured in `src/config/models.yaml`, or you can use a custom OpenAI-compatible API:
+
+### Standard Configuration
 
 ```yaml
 models:
@@ -101,6 +107,23 @@ You can:
 - Change the default model by modifying the `default` value
 - Add new models to the `available` section
 - Configure model-specific parameters like temperature and max_tokens
+
+### Custom API Mode
+
+You can use any OpenAI-compatible API by enabling custom mode in your `.env` file:
+
+```env
+VITE_COSTOM_MODE="true"
+VITE_COSTOM_BASE_URL="https://your-custom-api.com/v1/chat/completions"
+VITE_COSTOM_API_KEY="your-api-key"
+VITE_COSTOM_MODEL_NAME="your-model-name"
+```
+
+When custom mode is enabled:
+- The configuration from `models.yaml` will be ignored
+- All requests will be sent to your custom API endpoint
+- The API is expected to be OpenAI-compatible
+- Default parameters (temperature: 0.7, max_tokens: 4096) will be used
 
 ## Contributing
 

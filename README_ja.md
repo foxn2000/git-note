@@ -74,12 +74,18 @@ GitNoteは、指定されたGitHubリポジトリを分析し、AIを使用し�
 *   `VITE_CEREBRAS_API_KEY`: Cerebras APIにアクセスするためのAPIキー
 *   `VITE_OPENAI_API_KEY`: OpenAI APIにアクセスするためのAPIキー
 *   `VITE_ANTHROPIC_API_KEY`: Anthropic APIにアクセスするためのAPIキー
+*   `VITE_COSTOM_MODE`: カスタムAPIモードを有効にする場合は"true"を設定
+*   `VITE_COSTOM_BASE_URL`: カスタムのOpenAI互換APIエンドポイントのベースURL
+*   `VITE_COSTOM_API_KEY`: カスタムAPIのAPIキー
+*   `VITE_COSTOM_MODEL_NAME`: カスタムAPIで使用するモデル名
 
-使用予定のモデルのAPIキーのみを設定すれば良く、デフォルトで使用するモデルは `src/config/models.yaml` で設定できます。
+使用予定のモデルのAPIキーのみを設定すれば良く、デフォルトで使用するモデルは `src/config/models.yaml` で設定できます。カスタムモードが有効な場合、`models.yaml`の設定は無視され、代わりにカスタムAPI設定が使用されます。
 
 ## モデル設定
 
-このアプリケーションは複数の言語モデルをサポートしており、`src/config/models.yaml` で設定できます：
+このアプリケーションは複数の言語モデルをサポートしており、`src/config/models.yaml`で設定できます。また、カスタムのOpenAI互換APIを使用することもできます：
+
+### 標準設定
 
 ```yaml
 models:
@@ -102,6 +108,23 @@ models:
 - `default` の値を変更してデフォルトモデルを切り替え
 - `available` セクションに新しいモデルを追加
 - temperatureやmax_tokensなどのモデル固有のパラメータを設定
+
+### カスタムAPIモード
+
+`.env`ファイルでカスタムモードを有効にすることで、任意のOpenAI互換APIを使用できます：
+
+```env
+VITE_COSTOM_MODE="true"
+VITE_COSTOM_BASE_URL="https://your-custom-api.com/v1/chat/completions"
+VITE_COSTOM_API_KEY="your-api-key"
+VITE_COSTOM_MODEL_NAME="your-model-name"
+```
+
+カスタムモードが有効な場合：
+- `models.yaml`の設定は無視されます
+- すべてのリクエストはカスタムAPIエンドポイントに送信されます
+- APIはOpenAI互換である必要があります
+- デフォルトパラメータ（temperature: 0.7, max_tokens: 4096）が使用されます
 
 ## コントリビューション
 
