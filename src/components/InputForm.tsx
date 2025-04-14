@@ -11,18 +11,42 @@ const InputForm: React.FC<InputFormProps> = ({ onSubmit, isLoading }) => {
   const { translations } = useLanguage();
   const [language, setLanguage] = useState('ja');
 
+  // GitHubのURLからリポジトリ名（owner/repo）を抽出する関数
+  const extractRepoName = (input: string): string => {
+    // GitHub URLパターンの場合（https://github.com/owner/repo/tree/main などのパスを含む場合も対応）
+    const githubUrlPattern = /(?:https?:\/\/)?github\.com\/([a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+)(?:\/.*)?$/i;
+    const urlMatch = input.match(githubUrlPattern);
+    
+    if (urlMatch && urlMatch[1]) {
+      return urlMatch[1]; // URLからowner/repoの部分を抽出
+    }
+    
+    // 既存のowner/repoパターンの場合はそのまま返す
+    if (/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+$/.test(input)) {
+      return input;
+    }
+    
+    // どちらのパターンにも一致しない場合は空文字を返す（バリデーションエラー）
+    return '';
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!repoName.trim()) {
       alert(translations.input.repository.error.required);
       return;
     }
-    // 簡単な形式チェック (owner/repo)
-    if (!/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+$/.test(repoName)) {
+    
+    // 入力値からリポジトリ名を抽出
+    const extractedRepoName = extractRepoName(repoName);
+    
+    if (!extractedRepoName) {
       alert(translations.input.repository.error.format);
       return;
     }
-    onSubmit(repoName, language);
+    
+    // 抽出されたリポジトリ名を使用して送信
+    onSubmit(extractedRepoName, language);
   };
 
   return (

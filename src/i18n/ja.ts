@@ -5,10 +5,10 @@ export const ja = {
   input: {
     repository: {
       label: "GitHubリポジトリ:",
-      placeholder: "例: owner/repo",
+      placeholder: "例: owner/repo または https://github.com/owner/repo/tree/main",
       error: {
         required: "リポジトリ名を入力してください (例: owner/repo)",
-        format: "リポジトリ名は \"owner/repo\" の形式で入力してください。"
+        format: "リポジトリ名は \"owner/repo\" の形式、または任意のGitHub URLを入力してください。"
       }
     },
     language: {

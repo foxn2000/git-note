@@ -62,7 +62,7 @@ GitNote is a web application that analyzes a given GitHub repository and generat
     yarn dev
     ```
 2.  Open your browser and navigate to the local URL provided (usually `http://localhost:5173`).
-3.  Enter the GitHub repository name (e.g., `facebook/react`) and select the desired language for the report.
+3.  Enter the GitHub repository name (e.g., `facebook/react`) or paste a GitHub URL (e.g., `https://github.com/facebook/react` or `https://github.com/facebook/react/tree/main`) and select the desired language for the report.
 4.  Click "Analyze Repository".
 5.  Wait for the analysis to complete. The generated report will be displayed on the page.
 

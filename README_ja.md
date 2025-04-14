@@ -63,7 +63,7 @@ GitNoteは、指定されたGitHubリポジトリを分析し、AIを使用し�
     yarn dev
     ```
 2.  ブラウザを開き、提供されたローカルURL（通常は `http://localhost:5173`）にアクセスします。
-3.  GitHubリポジトリ名（例: `facebook/react`）を入力し、レポートの言語を選択します。
+3.  GitHubリポジトリ名（例: `facebook/react`）またはGitHub URL（例: `https://github.com/facebook/react` や `https://github.com/facebook/react/tree/main`）を入力し、レポートの言語を選択します。
 4.  「Analyze Repository」ボタンをクリックします。
 5.  分析が完了するのを待ちます。生成されたレポートがページに表示されます。
 

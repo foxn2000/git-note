@@ -5,10 +5,10 @@ export const en = {
   input: {
     repository: {
       label: "GitHub Repository:",
-      placeholder: "e.g., owner/repo",
+      placeholder: "e.g., owner/repo or https://github.com/owner/repo/tree/main",
       error: {
         required: "Please enter a repository name (e.g., owner/repo)",
-        format: "Repository name should be in the format \"owner/repo\"."
+        format: "Repository name should be in the format \"owner/repo\" or any valid GitHub URL."
       }
     },
     language: {
