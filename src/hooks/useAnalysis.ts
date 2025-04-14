@@ -552,7 +552,7 @@ ${markdown}
     // 日本語
     if (isJA) {
       unifyPrompt = `
-あなたはプロのテクニカルライターです。以下の4つの分析結果を統合して、一貫性のある最終的な技術記事を作成してください。
+あなたはプロのテクニカルライターです。以下の4つの分析結果を統合して、一貫性のある最終的な技術記事をMarkdownで作成してください。
 リポジトリ名: ${repoName}
 
 【要件】
@@ -560,6 +560,7 @@ ${markdown}
 2. 「使い方(Usage)」「インストール方法(Installation)」「リポジトリ構造(Structure)」「コードロジック(Code Logic)」の順でまとめる
 3. 見出しや箇条書きを活用し、重複があれば整理する
 4. 記事の末尾に簡単なまとめを書く
+5. コードブロックの前にはインデントを置かないで下さい。
 
 すべて日本語で回答してください。
 
@@ -587,6 +588,9 @@ REQUIREMENTS:
 2. Organize in this order: Usage, Installation, Repository Structure, Code Logic
 3. Use headings and bullet points, consolidating any duplicate info
 4. Conclude with a brief summary
+5. Do not indent before code blocks.
+
+Finally, please respond in English.
 
 Respond in English.
 
